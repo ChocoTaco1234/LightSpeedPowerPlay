@@ -1,0 +1,45 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+@TeleOp(name="Test0Set", group="LinearOpMode")
+
+public class Test0Set extends LinearOpMode {
+
+    //Name all your motors and servos (basically tell the code that these exist)
+    private DcMotor leftMotor, rightMotor, armMotor, middle1, middle2;
+    private Servo grabber, rotator;
+    private double ENCODER_TICKS_PER_ROTATION = 1120;
+    private ElapsedTime runtime = new ElapsedTime();
+
+
+    @Override
+    public void runOpMode() {
+
+        //telling the robot what is what for motors and servos
+        leftMotor = hardwareMap.dcMotor.get("left motor");
+        rightMotor = hardwareMap.dcMotor.get("right motor"); //Gets encoder
+        armMotor = hardwareMap.dcMotor.get("arm motor");
+        grabber = hardwareMap.servo.get("grabber");
+        rotator = hardwareMap.servo.get("grabber rotator");
+        middle1 = hardwareMap.dcMotor.get("middle1");
+        middle2 = hardwareMap.dcMotor.get("middle2"); //Gets encoder
+        
+        rotator.setPosition(convertDegreesToEncoderTicks(0));/** Change This value */
+        
+        waitForStart();
+
+        runtime.reset();
+        grabber.setPosition(0); /** Change This value too */
+    }
+    public int convertDegreesToEncoderTicks(double degrees) {
+        return (int) (degrees/360 * ENCODER_TICKS_PER_ROTATION);
+    }
+}
