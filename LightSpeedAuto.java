@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -63,7 +62,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Robot: Auto Drive", group="Robot")
+@Autonomous(name="Robot: Auto Drive LeftBack", group="Robot")
 
 public class LightSpeedAuto extends LinearOpMode {
 
@@ -104,6 +103,8 @@ public class LightSpeedAuto extends LinearOpMode {
         middle2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         middle2.setPower(0.5);
 
+
+
         //Closes the grabber
         grabber.setPosition(0.31);
 
@@ -124,7 +125,7 @@ public class LightSpeedAuto extends LinearOpMode {
 
         sleep(1000);
 
-        grabber.setPosition(.5); //Open the grabber and deposit the cone
+        grabber.setPosition(0.05); //Open the grabber and deposit the cone
 
         sleep(1000);
 
@@ -134,20 +135,17 @@ public class LightSpeedAuto extends LinearOpMode {
         sleep(1000);
         //Grabber let go
 
-        /**YOU SHOULD COPY THIS FORMAT FOR ALL RUN TO POSITION DRIVE COMMANDS***/
-        /***THE runtime.reset(); and then the (runtime.seconds() < 5.0) makes it wait for 5 seconds to center itself at
-         * the correct position
-         */
-        runtime.reset();
-        while (runtime.seconds() < 5.0) {
-            rightMotor.setTargetPosition(convertDegreesToEncoderTicks(100));
-            middle2.setTargetPosition(1250); //Middle wheel gets 537.6 encoder ticks per rotation 1250/537.6 = 2.1 rotations
-            middle1.setPower(middle2.getPower()); //Set the other middle wheel to the same power as middle2
-        }
+        rotator.setPosition(0);
+        sleep(1000);
+        rightMotor.setTargetPosition(convertDegreesToEncoderTicks(-200));
+        sleep(1000);
+        middle2.setTargetPosition(820); //Middle wheel gets 537.6 encoder ticks per rotation 1250/537.6 = 2.1 rotations
+
+        middle1.setPower(middle2.getPower()); //Set the other middle wheel to the same power as middle2
+        sleep(1000);
         rightMotor.setPower(0);
         middle1.setPower(0);
         middle2.setPower(0);
-        /***END BLOCK OF SAMPLE CODE FOR STRAFING LEFT***/
 
     }
 
