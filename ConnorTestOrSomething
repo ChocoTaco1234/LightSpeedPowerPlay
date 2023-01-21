@@ -1,0 +1,39 @@
+    package org.firstinspires.ftc.teamcode;
+
+
+    public class CodeForWill {
+
+
+            private DcMotor leftMotor, rightMotor
+
+  @Override
+  public void runOpMode() {
+
+          leftMotor = hardwareMap.dcMotor.get("left motor");
+          rightMotor = hardwareMap.dcMotor.get("right motor");
+
+
+          waitForStart();
+
+          while (opModeIsActive()) {
+
+            if (gamepad1.a)
+
+          if (gamepad1.left_bumper) {
+          driveFactor = 1;
+          }
+          if (gamepad1.right_bumper) {
+          driveFactor = 0.5;
+
+          if (gamepad1.button_y) {
+          driveFactor = 0.0 ;
+          }
+          }
+
+          leftMotor.setPower(driveFactor * gamepad1.left_stick_y);
+          rightMotor.setPower(driveFactor * gamepad1.right_stick_y);
+
+
+          if (gamepad1.button_y)
+            leftMotor.setPower(driveFactor * gamepad1.button_y) ;
+          rightMotor.setPower(driveFactor * gamepad1.button_y) ;
