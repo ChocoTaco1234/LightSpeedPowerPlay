@@ -29,23 +29,18 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import java.lang.Math.*;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Two Driver OpMode", group="Linear Opmode")
 public class LightSpeedTeleOp2Drivers extends LinearOpMode {
 
     // Declare Motors, Servos, etc.
-    private DcMotor leftMotor, rightMotor, armMotor, middle1, middle2;
-    private Servo grabber, rotator;
+    private DcMotor leftMotor, rightMotor, slideMotor, middle1, middle2;
+    private Servo grabber;
     private double ENCODER_TICKS_PER_ROTATION = 1120;
     private double driveFactor = 1;
 
@@ -53,52 +48,62 @@ public class LightSpeedTeleOp2Drivers extends LinearOpMode {
     public void runOpMode() {
 
         leftMotor = hardwareMap.dcMotor.get("left motor");
-        rightMotor = hardwareMap.dcMotor.get("right motor");
-        armMotor = hardwareMap.dcMotor.get("arm motor");
+        rightMotor = hardwareMap.dcMotor.get("right motor"); //Gets encoder
+        slideMotor = hardwareMap.dcMotor.get("slide motor");
         grabber = hardwareMap.servo.get("grabber");
-        rotator = hardwareMap.servo.get("grabber rotator");
         middle1 = hardwareMap.dcMotor.get("middle1");
         middle2 = hardwareMap.dcMotor.get("middle2");
 
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setTargetPosition(convertDegreesToEncoderTicks(0));
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(0.25);
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setTargetPosition(convertDegreesToEncoderTicks(0));
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setPower(0.75);
 
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        grabber.setPosition(.20);
-        rotator.setPosition(0);
-
         waitForStart();
 
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setTargetPosition(0);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setTargetPosition(0);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             if (gamepad2.a) {
-                armMotor.setTargetPosition(convertDegreesToEncoderTicks(0.0));
-                rotator.setPosition(.35);
+                slideMotor.setPower(0.4);
+                slideMotor.setTargetPosition(convertDegreesToEncoderTicks(45.0));
+
             } else if (gamepad2.x) {
-                armMotor.setTargetPosition(convertDegreesToEncoderTicks(90.0));
-                sleep(500);
-                rotator.setPosition(.60);
-            } else if (gamepad2.y) {
-                armMotor.setTargetPosition(convertDegreesToEncoderTicks(135.0));
-                sleep(500);
-                rotator.setPosition(.80);
-            } else if (gamepad2.b) {
-                armMotor.setTargetPosition(armMotor.getCurrentPosition() - (convertDegreesToEncoderTicks(5)));
+                slideMotor.setPower(0.8);
+                slideMotor.setTargetPosition(convertDegreesToEncoderTicks(641.0));
+            }
+            else if (gamepad2.y) {
+                slideMotor.setPower(0.8);
+                slideMotor.setTargetPosition(convertDegreesToEncoderTicks(986.0));
+            }
+            else if (gamepad2.b) {
+                slideMotor.setPower(0.8);
+                slideMotor.setTargetPosition(convertDegreesToEncoderTicks(1307.0));
+            }
+            else if (gamepad2.dpad_down) {
+                slideMotor.setPower(.4);
+                slideMotor.setTargetPosition(slideMotor.getCurrentPosition() - (convertDegreesToEncoderTicks(50)));
+            }
+            else if (gamepad2.dpad_up) {
+                slideMotor.setPower(.4);
+                slideMotor.setTargetPosition(slideMotor.getCurrentPosition() + (convertDegreesToEncoderTicks(50)));
+
             }
 
+
+
+
             if (gamepad2.right_trigger > .5) {
-                grabber.setPosition(.31);
+                grabber.setPosition(.91);
             } else {
-                grabber.setPosition(0.05);
+                grabber.setPosition(0);
             }
 
             if (gamepad1.left_bumper) {
@@ -111,16 +116,16 @@ public class LightSpeedTeleOp2Drivers extends LinearOpMode {
             leftMotor.setPower(driveFactor * gamepad1.left_stick_y);
             rightMotor.setPower(driveFactor * gamepad1.right_stick_y);
 
-            if (gamepad1.right_trigger > 0) {
-                middle1.setPower(driveFactor * gamepad1.right_trigger/2);
-                middle2.setPower(driveFactor * gamepad1.right_trigger/2);
-            } else {
-                middle1.setPower(driveFactor * -gamepad1.left_trigger/2);
-                middle2.setPower(driveFactor * -gamepad1.left_trigger/2);
+
+                middle1.setPower(driveFactor * (gamepad1.right_trigger-gamepad1.left_trigger)/2);
+                middle2.setPower(driveFactor * (gamepad1.right_trigger-gamepad1.left_trigger)/2);
+
+
             }
 
         }
-    }
+
+
 
     public int convertDegreesToEncoderTicks(double degrees) {
         return (int) (degrees/360 * ENCODER_TICKS_PER_ROTATION);
