@@ -1,0 +1,11 @@
+}
+
+            leftMotor.setPower(driveFactor * gamepad1.left_stick_y);
+            rightMotor.setPower(driveFactor * gamepad1.right_stick_y);
+
+
+                middle1.setPower(driveFactor * (gamepad1.right_trigger-gamepad1.left_trigger)/2);
+                middle2.setPower(driveFactor * (gamepad1.right_trigger-gamepad1.left_trigger)/2);
+
+
+            }
