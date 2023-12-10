@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Autonomous
-public class ColorAutonomousDetection extends OpMode {
+public class ColorAutonomousDetection extends LinearOpMode {
 
     OpenCvWebcam webcam1 = null;
 
@@ -52,7 +52,7 @@ public class ColorAutonomousDetection extends OpMode {
 
 
     @Override
-    public void init() {
+    public void runOpMode() {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "webcam1");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam1 = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
@@ -60,111 +60,98 @@ public class ColorAutonomousDetection extends OpMode {
         webcam1.setPipeline(new examplePipeline());
 
         webcam1.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
             public void onOpened() {
                 webcam1.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
             }
 
-            @Override
             public void onError(int errorCode) {
 
             }
         });
 
 
-    }
-
-
-
-
-
-
-    @Override
-    public void loop() {
         leftFront = hardwareMap.dcMotor.get("frontLeft");
         leftBack = hardwareMap.dcMotor.get("backLeft");
         rightFront = hardwareMap.dcMotor.get("frontRight");
         rightBack = hardwareMap.dcMotor.get("backRight");
 
-    }
-    class examplePipeline extends OpenCvPipeline {
-        Mat YCbCr = new Mat();
-        Mat leftCrop;
-        Mat rightCrop;
-        
-        double leftavgfin;
-        double rightavgfin;
+        private class examplePipeline extends OpenCvPipeline {
+            Mat YCbCr = new Mat();
+            Mat leftCrop;
+            Mat rightCrop;
+
+            double leftavgfin;
+            double rightavgfin;
 
 
-        Mat outPut = new Mat();
-        Scalar rectColor = new Scalar(255.0, 0.0, 0.0);
+            Mat outPut = new Mat();
+            Scalar rectColor = new Scalar(255.0, 0.0, 0.0);
 
 
-        public Mat processFrame(Mat input) {
-            Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
-            telemetry.addLine("pipeline running");
+            public Mat processFrame(Mat input) {
+                Imgproc.cvtColor(input, YCbCr, Imgproc.COLOR_RGB2YCrCb);
+                telemetry.addLine("pipeline running");
 
 
-            Rect leftRect = new Rect(1, 1, 319, 359);
-            Rect rightRect = new Rect(320, 1, 319, 359);
+                Rect leftRect = new Rect(1, 1, 319, 359);
+                Rect rightRect = new Rect(320, 1, 319, 359);
 
 
-            input.copyTo(outPut);
-            Imgproc.rectangle(outPut, leftRect, rectColor, 2);
-            Imgproc.rectangle(outPut, rightRect, rectColor, 2);
+                input.copyTo(outPut);
+                Imgproc.rectangle(outPut, leftRect, rectColor, 2);
+                Imgproc.rectangle(outPut, rightRect, rectColor, 2);
 
 
-            leftCrop = YCbCr.submat(leftRect);
-            rightCrop = YCbCr.submat(rightRect);
+                leftCrop = YCbCr.submat(leftRect);
+                rightCrop = YCbCr.submat(rightRect);
 
 
-            Core.extractChannel(leftCrop, leftCrop, 2);
-            Core.extractChannel(rightCrop,rightCrop,2);
+                Core.extractChannel(leftCrop, leftCrop, 2);
+                Core.extractChannel(rightCrop,rightCrop,2);
 
 
-            Scalar leftavg = Core.mean(leftCrop);
-            Scalar rightavg = Core.mean(rightCrop);
+                Scalar leftavg = Core.mean(leftCrop);
+                Scalar rightavg = Core.mean(rightCrop);
 
 
-            leftavgfin = leftavg.val[0];
-            rightavgfin = rightavg.val[0];
+                leftavgfin = leftavg.val[0];
+                rightavgfin = rightavg.val[0];
 
 
 
-                 if (leftavgfin > rightavgfin) {
+                if (leftavgfin > rightavgfin) {
 
-                    telemetry.addLine("Left");
-                    leftFront.setPower(.2);
-                    leftBack.setPower(-.2);
-                    rightBack.setPower(-.2);
-                    rightFront.setPower(.2);
+                    telemetry.addLine("right");
+
                 } else if (rightavgfin > leftavgfin) {
 
-                    telemetry.addLine("Right");
-                    leftFront.setPower(-.2);
-                    leftBack.setPower(.2);
-                    rightBack.setPower(.5);
-                    rightFront.setPower(-.2);
-                 }
+                    telemetry.addLine("left");
+                }
 
 
 
-            telemetry.addData("rightfinavg", rightavgfin);
-            telemetry.addData("leftfinavg", leftavgfin);
-            telemetry.addData("rightfin", rightavg);
-            telemetry.addData("leftfin", leftavg);
-            telemetry.update();
+                telemetry.addData("rightfinavg", rightavgfin);
+                telemetry.addData("leftfinavg", leftavgfin);
+                telemetry.addData("rightfin", rightavg);
+                telemetry.addData("leftfin", leftavg);
+                telemetry.update();
 
 
 
-            return (outPut);
+                return (outPut);
 
 
 
 
-        }
+            }
+
+
 
     }
+
+
+    }
+
 
 }
 
