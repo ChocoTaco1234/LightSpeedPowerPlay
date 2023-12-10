@@ -86,9 +86,6 @@ public class ColorAutonomousDetection extends OpMode {
         rightFront = hardwareMap.dcMotor.get("frontRight");
         rightBack = hardwareMap.dcMotor.get("backRight");
 
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-
     }
     class examplePipeline extends OpenCvPipeline {
         Mat YCbCr = new Mat();
@@ -133,27 +130,22 @@ public class ColorAutonomousDetection extends OpMode {
             rightavgfin = rightavg.val[0];
 
 
-                if (rightavgfin > 122){
-                    leftFront.setPower(0);
-                    leftBack.setPower(0);
-                    rightBack.setPower(0);
-                    rightFront.setPower(0);
-                }
-                if (leftavgfin > rightavgfin) {
+
+                 if (leftavgfin > rightavgfin) {
 
                     telemetry.addLine("Left");
-                    leftFront.setPower(.25);
-                    leftBack.setPower(-.25);
-                    rightBack.setPower(-.25);
-                    rightFront.setPower(.25);
-                }
-                if (rightavgfin > leftavgfin) {
+                    leftFront.setPower(.2);
+                    leftBack.setPower(-.2);
+                    rightBack.setPower(-.2);
+                    rightFront.setPower(.2);
+                } else if (rightavgfin > leftavgfin) {
 
                     telemetry.addLine("Right");
-                    leftFront.setPower(-.25);
-                    leftBack.setPower(.25);
-                    rightBack.setPower(.25);
-                    rightFront.setPower(-.25);}
+                    leftFront.setPower(-.2);
+                    leftBack.setPower(.2);
+                    rightBack.setPower(.5);
+                    rightFront.setPower(-.2);
+                 }
 
 
 
