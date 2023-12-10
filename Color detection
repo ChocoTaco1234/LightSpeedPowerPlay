@@ -50,12 +50,6 @@ public class ColorAutonomousDetection extends OpMode {
 
     private static DcMotor leftFront,leftBack,rightFront,rightBack, slideMotor;
 
-    private static double leftFrontPower,leftBackPower,rightBackPower,rightFrontPower;
-
-    private Servo grabber;
-    private double ENCODER_TICKS_PER_ROTATION = 1120;
-    private double driveFactor = 1;
-
 
     @Override
     public void init() {
@@ -148,18 +142,18 @@ public class ColorAutonomousDetection extends OpMode {
                 if (leftavgfin > rightavgfin) {
 
                     telemetry.addLine("Left");
-                    leftFront.setPower(.15);
-                    leftBack.setPower(-.15);
-                    rightBack.setPower(-.15);
-                    rightFront.setPower(.15);
+                    leftFront.setPower(.25);
+                    leftBack.setPower(-.25);
+                    rightBack.setPower(-.25);
+                    rightFront.setPower(.25);
                 }
                 if (rightavgfin > leftavgfin) {
 
                     telemetry.addLine("Right");
-                    leftFront.setPower(-.15);
-                    leftBack.setPower(.15);
-                    rightBack.setPower(.15);
-                    rightFront.setPower(-.15);}
+                    leftFront.setPower(-.25);
+                    leftBack.setPower(.25);
+                    rightBack.setPower(.25);
+                    rightFront.setPower(-.25);}
 
 
 
