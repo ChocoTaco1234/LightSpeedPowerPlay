@@ -64,28 +64,12 @@ public class LightSpeedCenterStage2DriverTeleOp extends LinearOpMode {
         planeServo = hardwareMap.servo.get("plane");
         rotateServo = hardwareMap.servo.get("rotate");
 
-        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setTargetPosition(convertDegreesToEncoderTicks(0));
-
-        dropperServo.setPosition(.0);
-        planeServo.setPosition(.20);
+        dropperServo.setPosition(.3);
+        planeServo.setPosition(0);
         rotateServo.setPosition(0);
 
-
-
-
-
-
-
-
         waitForStart();
-
-
-
-
-
-
-
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -97,7 +81,6 @@ public class LightSpeedCenterStage2DriverTeleOp extends LinearOpMode {
             leftJoystickY = gamepad1.left_stick_y;
             rightJoystickX = gamepad1.right_stick_x;
             rightJoystickY = gamepad1.right_stick_y;
-
 
             leftFrontPower = -leftJoystickY + leftJoystickX + rightJoystickX;
             rightFrontPower = leftJoystickY + leftJoystickX + rightJoystickX;
@@ -131,37 +114,71 @@ public class LightSpeedCenterStage2DriverTeleOp extends LinearOpMode {
                 rightBack.setPower(rightBackPower);
 
             }
+            if (gamepad2.left_trigger>.5){
+                rotateServo.setPosition(.07);
+            }
+            if (gamepad2.left_bumper){
+                rotateServo.setPosition(rotateServo.getPosition()+.005);
+            }
+
 
 
             if (gamepad2.a) {
                 slideMotor.setPower(0.6);
-                slideMotor.setTargetPosition(convertDegreesToEncoderTicks(990));
-
+                slideMotor.setTargetPosition(convertDegreesToEncoderTicks(1150));
+                if (gamepad2.dpad_up){
+                    slideMotor.setTargetPosition(convertDegreesToEncoderTicks(1700));
+                    sleep(1000);
+                    rotateServo.setPosition(.135);
+                }
             }
 
             if (gamepad2.b) {
                 slideMotor.setPower(0.6);
-                slideMotor.setTargetPosition(convertDegreesToEncoderTicks(10));
-            }
+                slideMotor.setTargetPosition(35);
+                rotateServo.setPosition(0);
+                dropperServo.setPosition(.3);
 
+            }
             if (gamepad2.right_trigger > 0.5) {
-                intakeMotor.setPower(0.55);
+                intakeMotor.setPower(1);
 
             } else {
                 intakeMotor.setPower(0);
                 intakeMotor.setTargetPosition(0);
             }
 
-            if (gamepad2.dpad_up) {
-                slideMotor.setTargetPosition(slideMotor.getCurrentPosition()+convertDegreesToEncoderTicks(10));
-            }
-            if (gamepad2.dpad_down) {
-                slideMotor.setTargetPosition(slideMotor.getCurrentPosition()+convertDegreesToEncoderTicks(-10));
-            }
-            if (gamepad2.dpad_left) {
+
+            if (gamepad2.x){
                 dropperServo.setPosition(0);
-            } else {
-                dropperServo.setPosition(.05);
+                if (gamepad2.dpad_down){
+                    dropperServo.setPosition(0);
+                }
+            }
+            if (gamepad2.y){
+                dropperServo.setPosition(.3);
+            }
+            if (gamepad1.left_trigger>.5){
+                leftFront.setPower(.1);
+                leftBack.setPower(.1);
+                rightFront.setPower(-.1);
+                rightBack.setPower(-.1);
+                sleep(1000);
+            }
+            if(gamepad1.y){
+                planeServo.setPosition(.5);
+            }
+            if (gamepad2.dpad_right){
+                slideMotor.setTargetPosition(slideMotor.getCurrentPosition()+convertDegreesToEncoderTicks(20));
+            }
+            if (gamepad2.dpad_left){
+                slideMotor.setTargetPosition(slideMotor.getCurrentPosition()-convertDegreesToEncoderTicks(20));
+            }
+            if (gamepad1.dpad_up){
+                slideMotor.setTargetPosition(slideMotor.getCurrentPosition()+convertDegreesToEncoderTicks(20));
+            }
+            if (gamepad1.dpad_down){
+                slideMotor.setTargetPosition(slideMotor.getCurrentPosition()-convertDegreesToEncoderTicks(20));
             }
 
             telemetry.addData("currentMotorPosition", slideMotor.getCurrentPosition());
